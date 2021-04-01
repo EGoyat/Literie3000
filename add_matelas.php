@@ -1,10 +1,11 @@
 <?php
 
-if (!empty($_post)){
+if (!empty($_POST)){
     $nom = trim(strip_tags($_POST["nom"]));
     $marque = trim(strip_tags($_POST["marque"]));
     $taille = trim(strip_tags($_POST["taille"]));
     $prix = trim(strip_tags($_POST["prix"]));
+    $image = trim(strip_tags($_POST["image"]));
 
     $errors = [];
 
@@ -16,14 +17,18 @@ if (!empty($_post)){
         $dsn = "mysql:host=localhost;dbname=literie3000";
         $db = new PDO($dsn, "root", "");
 
-        $query = $db->prepare("INSERT INTO matelas (nom, marque, taille, prix) VALUES (:nom, :marque, :taille, :prix)");
+        $query = $db->prepare("INSERT INTO matelas (nom, marque, taille, prix, image) VALUES (:nom, :marque, :taille, :prix, :image)");
         $query->bindParam(":nom", $nom);
         $query->bindParam(":marque", $marque);
         $query->bindParam(":taille", $taille);
-        $query->bindParam("prix", $prix);
+        $query->bindParam(":prix", $prix);
+        $query->bindParam(":image", $image);
         if ($query->execute()){
             header("location: index.php");
+        } else {
+            echo "lol";
         }
+
     }
 }
 include("tpl/header.php")
@@ -32,12 +37,8 @@ include("tpl/header.php")
 
 <form action="" method="post">
     <div class="form-group">
-        <label for="inputNom">Nom du matelas</label>
+        <label for="inputNom">Nom du matelas :</label>
         <input type="text" name="nom" id="inputNom" value="<?= isset($name) ? $name :""?>">
-        if (isset($errors["nom"])){
-        echo "<span class=\"info-error\">{$errors["nom"]}</span>
-        }
-        ?>
     </div>
 
     <div class="form-group">
@@ -46,7 +47,7 @@ include("tpl/header.php")
     </div>
 
     <div class="form-group">
-        <label for="inputTaille">Taille du matelas</label>
+        <label for="inputTaille">Taille du matelas :</label>
         <input type="text" name="taille" id="inputTaille" value="<?= isset($taille) ? $taille:""?>">
     </div>
 
@@ -55,6 +56,11 @@ include("tpl/header.php")
         <input type="text" name="prix" id="inputPrix" value="<?= isset($prix) ? $prix:""?>">
     </div>
 
+    <div class="form-group">
+        <label for="inputImage">Image du matelas :</label>
+        <input type="text" name="image" id="inputImage" value="<?= isset($image) ? $image:""?>">
+    </div>
+</br>
     <input class="btn-literie3000" type="submit" value="Ajouter le matelas">
 </form>
 <?php
